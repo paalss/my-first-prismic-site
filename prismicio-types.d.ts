@@ -4,6 +4,59 @@ import type * as prismic from "@prismicio/client";
 
 type Simplify<T> = { [KeyType in keyof T]: T[KeyType] };
 
+/**
+ * Item in *Menu → Menu items*
+ */
+export interface MenuDocumentDataMenuItemsItem {
+  /**
+   * Label field in *Menu → Menu items*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: menu.menu_items[].label
+   * - **Documentation**: https://prismic.io/docs/field#key-text
+   */
+  label: prismic.KeyTextField;
+
+  /**
+   * Link field in *Menu → Menu items*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: menu.menu_items[].link
+   * - **Documentation**: https://prismic.io/docs/field#link-content-relationship
+   */
+  link: prismic.LinkField;
+}
+
+/**
+ * Content for Menu documents
+ */
+interface MenuDocumentData {
+  /**
+   * Menu items field in *Menu*
+   *
+   * - **Field Type**: Group
+   * - **Placeholder**: *None*
+   * - **API ID Path**: menu.menu_items[]
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/field#group
+   */
+  menu_items: prismic.GroupField<Simplify<MenuDocumentDataMenuItemsItem>>;
+}
+
+/**
+ * Menu document from Prismic
+ *
+ * - **API ID**: `menu`
+ * - **Repeatable**: `false`
+ * - **Documentation**: https://prismic.io/docs/custom-types
+ *
+ * @typeParam Lang - Language API ID of the document.
+ */
+export type MenuDocument<Lang extends string = string> =
+  prismic.PrismicDocumentWithoutUID<Simplify<MenuDocumentData>, "menu", Lang>;
+
 type PageDocumentDataSlicesSlice = RichTextSlice;
 
 /**
@@ -76,7 +129,7 @@ interface PageDocumentData {
 export type PageDocument<Lang extends string = string> =
   prismic.PrismicDocumentWithUID<Simplify<PageDocumentData>, "page", Lang>;
 
-export type AllDocumentTypes = PageDocument;
+export type AllDocumentTypes = MenuDocument | PageDocument;
 
 /**
  * Default variation for Button Slice
@@ -104,6 +157,51 @@ type ButtonSliceVariation = ButtonSliceDefault;
  * - **Documentation**: https://prismic.io/docs/slice
  */
 export type ButtonSlice = prismic.SharedSlice<"button", ButtonSliceVariation>;
+
+/**
+ * Primary content in *Product → Primary*
+ */
+export interface ProductSliceDefaultPrimary {
+  /**
+   * Content field in *Product → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: Product description
+   * - **API ID Path**: product.primary.content
+   * - **Documentation**: https://prismic.io/docs/field#rich-text-title
+   */
+  content: prismic.RichTextField;
+}
+
+/**
+ * Default variation for Product Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: A product
+ * - **Documentation**: https://prismic.io/docs/slice
+ */
+export type ProductSliceDefault = prismic.SharedSliceVariation<
+  "default",
+  Simplify<ProductSliceDefaultPrimary>,
+  never
+>;
+
+/**
+ * Slice variation for *Product*
+ */
+type ProductSliceVariation = ProductSliceDefault;
+
+/**
+ * Product Shared Slice
+ *
+ * - **API ID**: `product`
+ * - **Description**: A product
+ * - **Documentation**: https://prismic.io/docs/slice
+ */
+export type ProductSlice = prismic.SharedSlice<
+  "product",
+  ProductSliceVariation
+>;
 
 /**
  * Primary content in *RichText → Primary*
@@ -160,6 +258,9 @@ declare module "@prismicio/client" {
 
   namespace Content {
     export type {
+      MenuDocument,
+      MenuDocumentData,
+      MenuDocumentDataMenuItemsItem,
       PageDocument,
       PageDocumentData,
       PageDocumentDataSlicesSlice,
@@ -167,6 +268,10 @@ declare module "@prismicio/client" {
       ButtonSlice,
       ButtonSliceVariation,
       ButtonSliceDefault,
+      ProductSlice,
+      ProductSliceDefaultPrimary,
+      ProductSliceVariation,
+      ProductSliceDefault,
       RichTextSlice,
       RichTextSliceDefaultPrimary,
       RichTextSliceVariation,
