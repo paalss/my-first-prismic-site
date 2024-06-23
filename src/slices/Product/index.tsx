@@ -29,7 +29,7 @@ type ProductProps = SliceComponentProps<Content.ButtonSlice>;
 const Product = ({ slice }: ProductProps): JSX.Element => {
   return (
     <section className={styles.richtext}>
-      <h2></h2>
+      <h2>AAAA</h2>
       <PrismicRichText field={slice.primary.content} components={components} />
     </section>
   );
