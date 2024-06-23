@@ -1,7 +1,7 @@
 import type { Content } from "@prismicio/client";
 import { PrismicNextLink } from "@prismicio/next";
 import {
-  PrismicProduct,
+  PrismicRichText,
   SliceComponentProps,
   JSXMapSerializer,
 } from "@prismicio/react";
@@ -21,7 +21,7 @@ const components: JSXMapSerializer = {
 /**
  * Props for `Product`.
  */
-type ProductProps = SliceComponentProps<Content.ProductSlice>;
+type ProductProps = SliceComponentProps<Content.ButtonSlice>;
 
 /**
  * Component for "Product" Slices.
@@ -29,7 +29,8 @@ type ProductProps = SliceComponentProps<Content.ProductSlice>;
 const Product = ({ slice }: ProductProps): JSX.Element => {
   return (
     <section className={styles.richtext}>
-      <PrismicProduct field={slice.primary.content} components={components} />
+      <h2></h2>
+      <PrismicRichText field={slice.primary.content} components={components} />
     </section>
   );
 };
